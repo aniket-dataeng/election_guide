@@ -8,7 +8,7 @@ let infoWindow;
 let isMapLoaded = false;
 
 function initBoothMap() {
-  if (typeof google === 'undefined' || !google.maps) {
+  if (typeof google === 'undefined' || !google || !google.maps) {
     showMapError();
     return;
   }
@@ -39,7 +39,9 @@ function initBoothMap() {
 window.gm_authFailure = function() {
   // Overrides the default alert and handles the UI gracefully
   console.warn("Google Maps Auth Failure - falling back to list view only if map object fails entirely. Dev mode still works.");
-  // Map actually works in Dev Mode, so we don't necessarily want to hide it.
+  // Map actually works in Dev Mode, but sometimes it injects a breaking error box.
+  // Force hide the map UI and show the clean fallback layout.
+  showMapError();
 };
 
 function handleSearch() {
