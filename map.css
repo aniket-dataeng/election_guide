@@ -1,0 +1,189 @@
+/* ============================================================
+   POLLING BOOTH LOCATOR CSS
+   ============================================================ */
+
+.locator-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.locator-search {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.locator-search__field {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.locator-search__icon {
+  position: absolute;
+  left: 1rem;
+  color: var(--grey-500);
+}
+
+.locator-search input {
+  width: 100%;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  color: var(--grey-900);
+  background: var(--grey-100);
+  border: 1.5px solid var(--grey-200, #e5e7eb);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  outline: none;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.locator-search input:focus {
+  background: var(--white);
+  border-color: var(--blue-500);
+  box-shadow: 0 0 0 3px var(--blue-100);
+}
+
+.locator-search input::placeholder {
+  color: var(--grey-500);
+}
+
+.locator-body {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1rem;
+  min-height: 400px;
+  max-height: 500px;
+  border: 1.5px solid var(--grey-200, #e5e7eb);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+/* Sidebar List */
+.locator-sidebar {
+  background: var(--white);
+  border-right: 1px solid var(--grey-200, #e5e7eb);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.locator-list-hint {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--grey-500);
+  font-size: 0.9rem;
+}
+
+.booth-card {
+  padding: 1rem;
+  border-bottom: 1px solid var(--grey-200, #e5e7eb);
+  cursor: pointer;
+  transition: background var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.booth-card:hover {
+  background: var(--blue-50);
+}
+.booth-card--active {
+  background: var(--blue-50);
+  border-left: 3px solid var(--blue-700);
+}
+
+.booth-card__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--grey-900);
+}
+
+.booth-card__desc {
+  font-size: 0.8rem;
+  color: var(--grey-500);
+  line-height: 1.4;
+}
+
+.booth-card__distance {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--teal);
+  background: var(--teal-bg);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  align-self: flex-start;
+  margin-top: 0.3rem;
+}
+
+/* Map area */
+.locator-map-wrapper {
+  position: relative;
+  background: var(--grey-100);
+}
+
+.locator-map {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+}
+
+.locator-map-error {
+  position: absolute;
+  inset: 0;
+  background: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--grey-600, #4b5563);
+  padding: 2rem;
+}
+.locator-map-error svg {
+  color: #dc2626;
+  margin-bottom: 0.5rem;
+}
+
+/* InfoWindow Styles */
+.gm-style .gm-style-iw {
+  border-radius: var(--radius-sm);
+  padding: 0.2rem;
+}
+.booth-info-window h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: var(--font);
+  color: var(--blue-700);
+  margin-bottom: 0.25rem;
+}
+.booth-info-window p {
+  font-family: var(--font);
+  font-size: 0.82rem;
+  color: var(--grey-600);
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+.booth-info-window .btn {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .locator-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: 250px 300px;
+  }
+  .locator-sidebar {
+    border-right: none;
+    border-top: 1.5px solid var(--grey-200, #e5e7eb);
+    grid-row: 2; /* Move list below map on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .locator-search { flex-direction: column; }
+}

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Election Guide – Your official resource for voter registration, election timelines, and civic assistance." />
+  <title>Election Guide | Official Voter Information Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="float-chat.css" />
+  <link rel="stylesheet" href="map.css" />
+
+</head>
+<body>
+
+  <!-- ===== ONBOARDING FLOW ===== -->
+  <div class="onboard-overlay" id="onboard-overlay" role="dialog" aria-modal="true" aria-labelledby="onboard-title">
+    <div class="onboard-modal">
+      <div class="onboard-modal__header">
+        <svg fill="none" width="28" height="28" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" class="onboard-modal__icon">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <h2 id="onboard-title">Let's Customize Your Guide</h2>
+        <p>Answer 3 quick questions to personalize your experience</p>
+      </div>
+      
+      <div class="onboard-steps">
+        <!-- Step 1: Age -->
+        <div class="onboard-step active" id="onboard-step-1">
+          <label class="onboard-label">1. Are you 18 years or older?</label>
+          <div class="onboard-options">
+            <button class="btn btn--outline onboard-opt" data-val="yes">Yes, 18+</button>
+            <button class="btn btn--outline onboard-opt" data-val="no">No, under 18</button>
+          </div>
+        </div>
+
+        <!-- Step 2: First time -->
+        <div class="onboard-step" id="onboard-step-2">
+          <label class="onboard-label">2. Is this your first time voting?</label>
+          <div class="onboard-options">
+            <button class="btn btn--outline onboard-opt" data-val="yes">Yes, first time</button>
+            <button class="btn btn--outline onboard-opt" data-val="no">No, I've voted before</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Location -->
+        <div class="onboard-step" id="onboard-step-3">
+          <label class="onboard-label">3. Select your State/UT</label>
+          <select class="onboard-select" id="onboard-location">
+            <option value="" disabled selected>Select State</option>
+            <option value="dl">Delhi</option>
+            <option value="mh">Maharashtra</option>
+            <option value="up">Uttar Pradesh</option>
+            <option value="tn">Tamil Nadu</option>
+            <option value="wb">West Bengal</option>
+            <option value="other">Other</option>
+          </select>
+          <button class="btn btn--primary onboard-next mt-3" id="onboard-finish" disabled>Continue</button>
+        </div>
+      </div>
+      
+      <button class="btn btn--ghost onboard-skip" id="onboard-skip">Skip for now</button>
+    </div>
+  </div>
+
+  <!-- ===== TOP NAVBAR ===== -->
+  <header class="navbar" role="banner">
+    <div class="navbar__inner container">
+      <div class="navbar__brand">
+        <div class="navbar__emblem" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18" cy="18" r="18" fill="#1a56a4"/>
+            <circle cx="18" cy="18" r="10" fill="none" stroke="#fff" stroke-width="2.5"/>
+            <line x1="18" y1="8" x2="18" y2="28" stroke="#fff" stroke-width="2"/>
+            <line x1="8" y1="18" x2="28" y2="18" stroke="#fff" stroke-width="2"/>
+            <circle cx="18" cy="18" r="3" fill="#f7931e"/>
+          </svg>
+        </div>
+        <div class="navbar__title-wrap">
+          <span class="navbar__title">Election Guide</span>
+          <span class="navbar__subtitle">Official Voter Information Portal</span>
+        </div>
+      </div>
+
+      <div class="navbar__actions">
+        <div class="lang-selector" id="lang-selector">
+          <label for="language-select" class="sr-only">Select Language</label>
+          <select id="language-select" class="lang-select" aria-label="Select language">
+            <option value="en">🌐 English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="mr">मराठी</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+            <option value="bn">বাংলা</option>
+          </select>
+        </div>
+        <button class="btn btn--outline btn--sm" id="help-btn" aria-label="Help">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Help
+        </button>
+      </div>
+    </div>
+
+    <!-- Official notice strip -->
+    <div class="notice-strip" role="complementary" aria-label="Official notice">
+      <div class="container">
+        <span class="notice-strip__icon" aria-hidden="true">ℹ</span>
+        This is an official government information portal. For emergencies, call the Election Helpline:&nbsp;<strong>1950</strong>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== HERO BANNER ===== -->
+  <section class="hero" role="region" aria-label="Welcome banner">
+    <div class="container hero__inner">
+      <div class="hero__text">
+        <p class="hero__eyebrow">General Elections 2024</p>
+        <h1 class="hero__title">Your Vote. Your Voice. Your Democracy.</h1>
+        <p class="hero__desc">Access everything you need to participate in India's democratic process — from voter registration to polling day guidance.</p>
+        <div class="hero__cta-group">
+          <a href="#voting-journey" class="btn btn--primary" id="start-journey-cta">Start Your Journey</a>
+          <a href="#ask-assistant" class="btn btn--ghost" id="ask-cta">Ask a Question</a>
+        </div>
+      </div>
+      <div class="hero__badge" aria-hidden="true">
+        <div class="badge-ring">
+          <div class="badge-inner">
+            <span class="badge-num">946M</span>
+            <span class="badge-label">Eligible<br/>Voters</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MAIN DASHBOARD ===== -->
+  <main class="main-content container" id="dashboard" role="main">
+
+    <!-- ─── SECTION 1: Start Your Voting Journey (Interactive Stepper) ─── -->
+    <section class="dashboard-section" id="voting-journey" aria-labelledby="journey-heading">
+      <div class="section-header">
+        <div class="section-header__icon section-header__icon--blue" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div>
+          <h2 class="section-title" id="journey-heading">Start Your Voting Journey</h2>
+          <p class="section-desc">Complete each step to be fully prepared for election day.</p>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="stepper-progress" aria-label="Voting journey progress">
+        <div class="stepper-progress__bar-wrap">
+          <div class="stepper-progress__bar" id="stepper-bar" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="5" style="width:20%"></div>
+        </div>
+        <p class="stepper-progress__label" id="stepper-progress-label">Step 1 of 5</p>
+      </div>
+
+      <!-- Step Indicators -->
+      <ol class="stepper-nav" id="stepper-nav" aria-label="Journey steps">
+        <li class="stepper-nav__item stepper-nav__item--active" data-step="0" id="step-nav-0">
+          <span class="stepper-nav__circle">1</span>
+          <span class="stepper-nav__label">Eligibility</span>
+        </li>
+        <li class="stepper-nav__item" data-step="1" id="step-nav-1">
+          <span class="stepper-nav__circle">2</span>
+          <span class="stepper-nav__label">Register</span>
+        </li>
+        <li class="stepper-nav__item" data-step="2" id="step-nav-2">
+          <span class="stepper-nav__circle">3</span>
+          <span class="stepper-nav__label">Verify ID</span>
+        </li>
+        <li class="stepper-nav__item" data-step="3" id="step-nav-3">
+          <span class="stepper-nav__circle">4</span>
+          <span class="stepper-nav__label">Find Booth</span>
+        </li>
+        <li class="stepper-nav__item" data-step="4" id="step-nav-4">
+          <span class="stepper-nav__circle">5</span>
+          <span class="stepper-nav__label">Voting Day</span>
+        </li>
+      </ol>
+
+      <!-- Active Step Card -->
+      <div class="stepper-card" id="stepper-card" aria-live="polite">
+        <!-- JS renders the active step here -->
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="stepper-actions">
+        <button class="btn btn--outline" id="stepper-back" aria-label="Previous step" disabled>
+          ← Back
+        </button>
+        <button class="btn btn--primary" id="stepper-next" aria-label="Next step">
+          Next Step →
+        </button>
+      </div>
+    </section>
+
+
+    <!-- ─── SECTION 2: Election Timeline ─── -->
+    <section class="dashboard-section" id="election-timeline" aria-labelledby="timeline-heading">
+      <div class="section-header">
+        <div class="section-header__icon section-header__icon--orange" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div>
+          <h2 class="section-title" id="timeline-heading">Election Timeline</h2>
+          <p class="section-desc">Key milestones for the General Elections 2024 — scroll to view all dates.</p>
+        </div>
+      </div>
+
+      <div class="timeline-scroll" tabindex="0" role="region" aria-label="Scrollable election timeline">
+        <ol class="timeline" aria-label="Election events">
+
+          <!-- 1. Registration Deadline -->
+          <li class="timeline__item timeline__item--done">
+            <div class="timeline__left">
+              <div class="timeline__icon-wrap timeline__icon-wrap--done" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <div class="timeline__line"></div>
+            </div>
+            <div class="timeline__card">
+              <header class="timeline__card-header">
+                <span class="timeline__badge timeline__badge--done">✓ Completed</span>
+                <time class="timeline__date" datetime="2024-03-28">28 March 2024</time>
+              </header>
+              <h3 class="timeline__event">Registration Deadline</h3>
+              <p class="timeline__detail">Last date to submit <strong>Form 6</strong> on the NVSP portal to register as a new voter for Phase 1 constituencies.</p>
+              <div class="timeline__meta">
+                <span class="timeline__meta-tag">📋 Form 6</span>
+                <span class="timeline__meta-tag">🌐 NVSP Portal</span>
+              </div>
+            </div>
+          </li>
+
+          <!-- 2. Campaign Period -->
+          <li class="timeline__item timeline__item--done">
+            <div class="timeline__left">
+              <div class="timeline__icon-wrap timeline__icon-wrap--done" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                </svg>
+              </div>
+              <div class="timeline__line"></div>
+            </div>
+            <div class="timeline__card">
+              <header class="timeline__card-header">
+                <span class="timeline__badge timeline__badge--done">✓ Completed</span>
+                <time class="timeline__date" datetime="2024-03-16/2024-05-30">16 Mar – 30 May 2024</time>
+              </header>
+              <h3 class="timeline__event">Campaign Period</h3>
+              <p class="timeline__detail">Candidates and parties campaign across constituencies. Campaign activities cease <strong>48 hours</strong> before polling in each phase.</p>
+              <div class="timeline__meta">
+                <span class="timeline__meta-tag">📢 Model Code Active</span>
+                <span class="timeline__meta-tag">⏱ 48hr Silence Rule</span>
+              </div>
+            </div>
+          </li>
+
+          <!-- 3. Voting Day -->
+          <li class="timeline__item timeline__item--active">
+            <div class="timeline__left">
+              <div class="timeline__icon-wrap timeline__icon-wrap--active" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M9 11l3 3L22 4"/>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+              </div>
+              <div class="timeline__line"></div>
+            </div>
+            <div class="timeline__card">
+              <header class="timeline__card-header">
+                <span class="timeline__badge timeline__badge--active">⚡ Ongoing</span>
+                <time class="timeline__date" datetime="2024-04-19/2024-06-01">19 Apr – 1 Jun 2024</time>
+              </header>
+              <h3 class="timeline__event">Voting Day (7 Phases)</h3>
+              <p class="timeline__detail">Voters cast ballots at their assigned polling booths. Polling hours are <strong>7:00 AM – 6:00 PM</strong>. Valid photo ID required.</p>
+              <div class="timeline__meta">
+                <span class="timeline__meta-tag">🕖 7AM – 6PM</span>
+                <span class="timeline__meta-tag">🏛 7 Phases</span>
+                <span class="timeline__meta-tag">🪪 Photo ID Required</span>
+              </div>
+            </div>
+          </li>
+
+          <!-- 4. Result Day -->
+          <li class="timeline__item">
+            <div class="timeline__left">
+              <div class="timeline__icon-wrap" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              </div>
+              <div class="timeline__line timeline__line--last"></div>
+            </div>
+            <div class="timeline__card">
+              <header class="timeline__card-header">
+                <span class="timeline__badge timeline__badge--upcoming">Upcoming</span>
+                <time class="timeline__date" datetime="2024-06-04">4 June 2024</time>
+              </header>
+              <h3 class="timeline__event">Result Day</h3>
+              <p class="timeline__detail">Counting of votes begins at <strong>8:00 AM</strong> simultaneously across all constituencies. Results declared by evening.</p>
+              <div class="timeline__meta">
+                <span class="timeline__meta-tag">📊 Vote Count</span>
+                <span class="timeline__meta-tag">📺 Live Updates</span>
+              </div>
+            </div>
+          </li>
+
+        </ol>
+      </div><!-- /.timeline-scroll -->
+    </section>
+
+
+
+    <!-- ─── SECTION 3: Polling Booth Locator ─── -->
+    <section class="dashboard-section" id="booth-locator" aria-labelledby="map-heading">
+      <div class="section-header">
+        <div class="section-header__icon section-header__icon--teal" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="section-title" id="map-heading">Find Your Polling Booth</h2>
+          <p class="section-desc">Search by area or PIN code to locate your designated polling station.</p>
+        </div>
+      </div>
+
+      <div class="locator-widget">
+        <!-- Search Bar -->
+        <div class="locator-search">
+          <div class="locator-search__field">
+            <svg class="locator-search__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="locator-input" placeholder="Enter location or PIN code" aria-label="Search location" />
+          </div>
+          <button class="btn btn--primary" id="locator-search-btn">Find Booth</button>
+        </div>
+
+        <!-- Main Body: Map & Sidebar -->
+        <div class="locator-body">
+          <div class="locator-sidebar">
+            <div id="locator-list">
+              <p class="locator-list-hint">Enter a location to find booths nearby.</p>
+            </div>
+          </div>
+          <div class="locator-map-wrapper">
+            <div id="locator-map" class="locator-map"></div>
+            <div id="locator-map-error" class="locator-map-error" style="display:none;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <p>Map failed to load.<br>Please use the list view on the side.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SECTION 4: Ask Assistant ─── -->
+    <section class="dashboard-section" id="ask-assistant" aria-labelledby="assistant-heading">
+      <div class="section-header">
+        <div class="section-header__icon section-header__icon--teal" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div>
+          <h2 class="section-title" id="assistant-heading">Ask Assistant</h2>
+          <p class="section-desc">Get instant answers to your election and voting queries.</p>
+        </div>
+      </div>
+
+      <div class="assistant-layout">
+        <!-- Chat Window -->
+        <div class="chat-window" aria-live="polite" aria-label="Election Assistant chat">
+          <div class="chat-header">
+            <div class="chat-header__avatar" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            </div>
+            <div>
+              <p class="chat-header__name">ECI Assistant</p>
+              <p class="chat-header__status"><span class="status-dot" aria-hidden="true"></span>Online</p>
+            </div>
+          </div>
+
+          <div class="chat-body" id="chat-body">
+            <div class="chat-msg chat-msg--bot">
+              <div class="chat-msg__bubble">
+                👋 Namaste! I'm your Election Guide assistant. How can I help you today?
+              </div>
+              <span class="chat-msg__time">Just now</span>
+            </div>
+          </div>
+
+          <form class="chat-input-area" id="chat-form" autocomplete="off" onsubmit="return false;">
+            <input
+              type="text"
+              id="chat-input"
+              class="chat-input"
+              placeholder="Type your question about voting…"
+              aria-label="Type your election question"
+              maxlength="300"
+            />
+            <button type="submit" class="chat-send-btn" id="chat-send" aria-label="Send message">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </form>
+        </div>
+
+        <!-- Quick FAQ Chips -->
+        <div class="faq-panel" aria-label="Frequently asked questions">
+          <h3 class="faq-panel__title">Frequently Asked</h3>
+          <ul class="faq-list" id="faq-list">
+            <li>
+              <button class="faq-chip" id="faq-1" data-question="How do I register to vote?">
+                How do I register to vote?
+              </button>
+            </li>
+            <li>
+              <button class="faq-chip" id="faq-2" data-question="What documents do I need on election day?">
+                What documents do I need on election day?
+              </button>
+            </li>
+            <li>
+              <button class="faq-chip" id="faq-3" data-question="Where is my polling booth?">
+                Where is my polling booth?
+              </button>
+            </li>
+            <li>
+              <button class="faq-chip" id="faq-4" data-question="What is EVM and how does it work?">
+                What is EVM and how does it work?
+              </button>
+            </li>
+            <li>
+              <button class="faq-chip" id="faq-5" data-question="Can I vote if I have moved to a new address?">
+                Can I vote if I moved address?
+              </button>
+            </li>
+            <li>
+              <button class="faq-chip" id="faq-6" data-question="What are the voting hours on election day?">
+                What are the voting hours?
+              </button>
+            </li>
+          </ul>
+
+          <div class="helpline-card" role="complementary" aria-label="Helpline information">
+            <p class="helpline-card__label">📞 Election Helpline</p>
+            <p class="helpline-card__num">1950</p>
+            <p class="helpline-card__sub">Toll-free · Available 24×7</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== TRUST & SECURITY SECTION ===== -->
+  <section class="trust-section" aria-labelledby="trust-heading">
+    <div class="container">
+      <h2 id="trust-heading" class="sr-only">Trust and Security Information</h2>
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-card__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Secure & Secret Voting</h3>
+          <p>Electronic Voting Machines (EVMs) are standalone devices, not connected to any network.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-card__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+            </svg>
+          </div>
+          <h3>Verify Your Vote</h3>
+          <p>VVPAT allows you to instantly verify that your vote went to the chosen candidate.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-card__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3>Why Voting Matters</h3>
+          <p>Your vote shapes the future policies, laws, and leadership representing you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <p class="footer__name">Election Commission of India</p>
+        <p class="footer__copy">© 2024 Government of India. All rights reserved.</p>
+      </div>
+      <nav class="footer__links" aria-label="Footer navigation">
+        <a href="https://eci.gov.in" target="_blank">Official ECI Website</a>
+        <a href="https://voters.eci.gov.in" target="_blank">Voter Portal (NVSP)</a>
+        <a href="#" id="footer-privacy">Privacy Policy</a>
+        <a href="#" id="footer-accessibility">Accessibility</a>
+      </nav>
+    </div>
+  </footer>
+
+
+  <!-- ===== FLOATING CHATBOT (AskDISHA Style) ===== -->
+
+  <!-- FAB trigger button -->
+  <button class="fab" id="fab-chat-btn" aria-label="Open Election Assistant" aria-expanded="false" aria-controls="float-chat">
+    <span class="fab__icon fab__icon--chat" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </span>
+    <span class="fab__icon fab__icon--close" aria-hidden="true" style="display:none">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </span>
+    <span class="fab__badge" id="fab-badge" aria-label="1 unread message">1</span>
+  </button>
+
+  <!-- Floating chat panel -->
+  <aside class="float-chat" id="float-chat" role="dialog" aria-modal="true" aria-label="Election Assistant" aria-hidden="true">
+
+    <!-- Header -->
+    <header class="float-chat__header">
+      <div class="float-chat__header-left">
+        <div class="float-chat__avatar" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v4l3 3"/>
+          </svg>
+        </div>
+        <div>
+          <p class="float-chat__name">ECI Assistant</p>
+          <p class="float-chat__status">
+            <span class="float-status-dot" aria-hidden="true"></span>
+            Online · Election Guide
+          </p>
+        </div>
+      </div>
+      <div class="float-chat__header-actions">
+        <button class="float-chat__hdr-btn" id="float-minimize" aria-label="Minimize chat" title="Minimize">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <button class="float-chat__hdr-btn" id="float-close" aria-label="Close chat" title="Close">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Chat body -->
+    <div class="float-chat__body" id="float-chat-body" role="log" aria-live="polite" aria-label="Chat messages">
+      <!-- Welcome message injected by JS -->
+    </div>
+
+    <!-- Preloaded quick queries -->
+    <div class="float-chat__suggestions" id="float-suggestions" aria-label="Suggested questions">
+      <button class="float-chip" id="fchip-1" data-q="How do I register to vote?">🗳️ How do I register to vote?</button>
+      <button class="float-chip" id="fchip-2" data-q="What documents are required on election day?">📄 What documents are required?</button>
+      <button class="float-chip" id="fchip-3" data-q="How to find my polling booth?">📍 How to find polling booth?</button>
+    </div>
+
+    <!-- Input -->
+    <form class="float-chat__input-row" id="float-chat-form" autocomplete="off" onsubmit="return false;">
+      <input
+        type="text"
+        id="float-chat-input"
+        class="float-chat__input"
+        placeholder="Ask about voting, registration…"
+        aria-label="Type your question"
+        maxlength="300"
+      />
+      <button type="submit" class="float-chat__send" id="float-send" aria-label="Send">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </form>
+
+    <!-- Footer -->
+    <p class="float-chat__footer">Powered by ECI · Information only · Call <strong>1950</strong> for help</p>
+  </aside>
+
+  <!-- ===== BOTTOM NAVIGATION ===== -->
+  <nav class="bottom-nav">
+    <a href="#dashboard" class="bottom-nav__item active">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="#voting-journey" class="bottom-nav__item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span>Journey</span>
+    </a>
+    <a href="#booth-locator" class="bottom-nav__item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span>Map</span>
+    </a>
+    <a href="#ask-assistant" class="bottom-nav__item">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Assistant</span>
+    </a>
+  </nav>
+
+  <script src="app.js"></script>
+  <script src="map.js"></script>
+
+  <!-- Google Maps API with a dummy key & callback (will trigger dev mode but work for UI) -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=DUMMY_KEY_FOR_DEV&libraries=places&callback=initBoothMap"></script>
+</body>
+</html>
