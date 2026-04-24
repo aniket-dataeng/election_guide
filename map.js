@@ -7,14 +7,6 @@ let markers = [];
 let infoWindow;
 let isMapLoaded = false;
 
-// Dummy polling booth data
-const dummyBooths = [
-  { id: 1, name: "Govt. Boys Senior Secondary School", address: "Sector 4, R.K. Puram, New Delhi", lat: 28.5678, lng: 77.1724, distance: "0.4 km" },
-  { id: 2, name: "Kendriya Vidyalaya", address: "Sector 8, R.K. Puram, New Delhi", lat: 28.5701, lng: 77.1698, distance: "0.8 km" },
-  { id: 3, name: "Delhi Public School", address: "Vasant Vihar, New Delhi", lat: 28.5612, lng: 77.1601, distance: "1.2 km" },
-  { id: 4, name: "Sarvodaya Vidyalaya", address: "Munirka, New Delhi", lat: 28.5589, lng: 77.1756, distance: "1.5 km" },
-];
-
 function initBoothMap() {
   if (typeof google === 'undefined' || !google.maps) {
     showMapError();
@@ -52,26 +44,55 @@ window.gm_authFailure = function() {
 
 function handleSearch() {
   const query = document.getElementById("locator-input").value.trim();
-  if (!query) return;
+  const listContainer = document.getElementById("locator-list");
+  
+  if (!query) {
+    listContainer.innerHTML = '<p class="locator-list-hint" style="color:red;">Error: Please enter a ZIP code.</p>';
+    return;
+  }
 
   // Simulate an API call delay
-  document.getElementById("locator-list").innerHTML = '<p class="locator-list-hint">Searching nearby booths...</p>';
+  listContainer.innerHTML = '<p class="locator-list-hint">Searching nearby booths...</p>';
   document.getElementById("locator-search-btn").disabled = true;
   document.getElementById("locator-search-btn").textContent = "Searching...";
 
   setTimeout(() => {
-    displayResults(dummyBooths);
-    
-    // Simulate focusing the map on the first result
-    if (isMapLoaded && map) {
-      map.setCenter({ lat: dummyBooths[0].lat, lng: dummyBooths[0].lng });
-      map.setZoom(14);
+    // Read from centralized DataStore using the ZIP query
+    const results = window.DataStore && window.DataStore.booths && window.DataStore.booths[query] 
+                    ? window.DataStore.booths[query] 
+                    : [];
+
+    if (results.length === 0) {
+      listContainer.innerHTML = '<p class="locator-list-hint">No booths found for this ZIP code.</p>';
+      clearMarkers();
+    } else {
+      displayResults(results);
+      
+      // Simulate focusing the map on the first result
+      if (isMapLoaded && map) {
+        map.setCenter({ lat: results[0].lat, lng: results[0].lng });
+        map.setZoom(14);
+      }
     }
     
     document.getElementById("locator-search-btn").disabled = false;
     document.getElementById("locator-search-btn").textContent = "Find Booth";
   }, 800);
 }
+
+window.triggerMapSearch = function(zip) {
+  // Sync Map search by auto-populating input and firing search
+  document.getElementById("locator-input").value = zip;
+  document.getElementById("booth-locator").scrollIntoView({ behavior: 'smooth' });
+  
+  // Highlight map navigation tab
+  document.querySelectorAll('.bottom-nav__item').forEach(nav => nav.classList.remove('active'));
+  const mapNav = Array.from(document.querySelectorAll('.bottom-nav__item')).find(n => n.getAttribute('href') === '#booth-locator');
+  if(mapNav) mapNav.classList.add('active');
+
+  handleSearch();
+};
+
 
 function displayResults(booths) {
   const listContainer = document.getElementById("locator-list");

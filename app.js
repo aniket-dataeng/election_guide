@@ -19,6 +19,39 @@ const answers = {
   location: null
 };
 
+// ============================================================
+// CENTRAL DATA STORE (MOCK API DB)
+// ============================================================
+window.DataStore = {
+  booths: {
+    "110022": [
+      { id: 1, name: "Govt. Boys Senior Secondary School", address: "Sector 4, R.K. Puram, New Delhi", lat: 28.5678, lng: 77.1724, distance: "0.4 km" },
+      { id: 2, name: "Kendriya Vidyalaya", address: "Sector 8, R.K. Puram, New Delhi", lat: 28.5701, lng: 77.1698, distance: "0.8 km" }
+    ],
+    "400001": [
+      { id: 3, name: "Elphinstone College", address: "Fort, Mumbai", lat: 18.9272, lng: 72.8306, distance: "0.5 km" },
+      { id: 4, name: "St. Xavier's High School", address: "Fort, Mumbai", lat: 18.9405, lng: 72.8335, distance: "1.1 km" }
+    ]
+  },
+  candidates: {
+    "110022": [
+      { id: "c1", name: "Ramesh Kumar", party: "National Democratic Party", symbol: "Lotus" },
+      { id: "c2", name: "Sunita Sharma", party: "United Progressive Front", symbol: "Hand" }
+    ],
+    "400001": [
+      { id: "c3", name: "Milind Deora", party: "Maha Vikas Front", symbol: "Bow & Arrow" }
+    ]
+  },
+  ballots: {
+    "110022": [
+      { position: 1, name: "Ramesh Kumar", party: "NDP" },
+      { position: 2, name: "Sunita Sharma", party: "UPF" },
+      { position: 3, name: "NOTA", party: "None" }
+    ]
+  }
+};
+
+
 // Start logic
 function initOnboarding() {
   document.querySelectorAll('.onboard-opt').forEach(btn => {
@@ -130,26 +163,47 @@ const STEPS = [
     cta: { label: 'Search the Electoral Roll →', href: '#' },
   },
   {
-    title: 'Find Your Polling Booth',
+    title: 'Find Your Polling Booth & Candidates',
     icon: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
     bullets: [
       'Log in to NVSP and use <strong>"Know Your Booth"</strong> to find your assigned polling station.',
-      'Note the booth address and <strong>polling date/time</strong> for your constituency phase.',
+      'Research the candidates standing in your constituency before arriving.',
       'Plan your route in advance — consider travel time and local transport.',
     ],
-    cta: { label: 'Find my polling booth →', href: '#' },
+    cta: { label: 'Know Your Candidate →', href: 'javascript:window.viewCandidates()' },
   },
   {
-    title: 'Voting Day Process',
+    title: 'Voting Day Process & Ballot',
     icon: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><polyline points="20 6 9 17 4 12"/></svg>`,
     bullets: [
       'Carry your <strong>Voter ID / e-EPIC</strong> or any of the 12 approved alternate photo IDs.',
       'Polling hours are <strong>7:00 AM – 6:00 PM</strong>; join any queue before 6 PM to vote.',
-      'Press the button next to your candidate on the <strong>EVM</strong> — the VVPAT will display your choice.',
+      'Press the button next to your candidate on the <strong>EVM</strong> — the VVPAT will display your choice. You can view a sample ballot paper.',
     ],
-    cta: { label: 'Read the complete voting guide →', href: '#' },
+    cta: { label: 'View Ballot Paper →', href: 'javascript:window.viewBallots()' },
   },
 ];
+
+// Global mocks for specific features
+window.viewCandidates = function() {
+  const query = document.getElementById("locator-input") ? document.getElementById("locator-input").value.trim() || "110022" : "110022";
+  const data = window.DataStore.candidates[query];
+  if(data) {
+     alert("CANDIDATES IN YOUR CONSTITUENCY (" + query + "):\n\n" + data.map(c => `• ${c.name} (${c.party})`).join("\n"));
+  } else {
+     alert("No candidate data found for " + query + ". Try 110022.");
+  }
+}
+
+window.viewBallots = function() {
+  const query = document.getElementById("locator-input") ? document.getElementById("locator-input").value.trim() || "110022" : "110022";
+  const data = window.DataStore.ballots[query];
+  if(data) {
+     alert("SAMPLE BALLOT PAPER (" + query + "):\n\n" + data.map(b => `${b.position}. ${b.name} | ${b.party}`).join("\n"));
+  } else {
+     alert("No ballot data found for " + query + ". Try 110022.");
+  }
+}
 
 let currentStep = 0;
 
@@ -304,6 +358,23 @@ function appendMessage(text, role) {
 }
 
 function botReply(question) {
+  // Feature 5/6: Check for Zip code search
+  if (/^\d{6}$/.test(question.trim())) {
+    const q = question.trim();
+    const data = window.DataStore && window.DataStore.booths ? window.DataStore.booths[q] : null;
+    
+    setTimeout(() => {
+      if (data && data.length > 0) {
+        const bullets = data.slice(0,3).map(b => `<li><strong>${b.name}</strong><br/>${b.address} (${b.distance})</li>`).join('');
+        appendMessage(`<p>Here are the polling booths near ZIP ${q}:</p><ul>${bullets}</ul><p style="font-size:0.8rem;opacity:0.8;">📍 I have synced the Map to this location!</p>`, 'bot');
+        if(typeof window.triggerMapSearch === 'function') window.triggerMapSearch(q);
+      } else {
+        appendMessage(`<p>We couldn't find any booths for ZIP ${q}.</p><ul><li>Ensure it is an Indian 6-digit PIN.</li><li>Call Election Helpline at 1950.</li></ul>`, 'bot');
+      }
+    }, 600);
+    return;
+  }
+
   const answer = FAQ_RESPONSES[question] ||
     "I don't have a specific answer for that right now. Please call the Election Helpline at <b>1950</b> for personalised assistance.";
 
@@ -467,6 +538,28 @@ function floatBotReply(question) {
 
   setTimeout(() => {
     floatBody.removeChild(typing);
+
+    // Sync Feature via zip search
+    if (/^\d{6}$/.test(question.trim())) {
+      const q = question.trim();
+      const data = window.DataStore && window.DataStore.booths ? window.DataStore.booths[q] : null;
+      if (data && data.length > 0) {
+        floatAppendMsg(buildBotHTML({
+          intro: `Here are the polling booths near ZIP ${q}:`,
+          bullets: data.slice(0,3).map(b => `<strong>${b.name}</strong><br/>${b.address} (${b.distance})`),
+          note: "I have updated your map below to highlight these locations! 📍"
+        }), 'bot');
+        if (typeof window.triggerMapSearch === 'function') setTimeout(() => window.triggerMapSearch(q), 500);
+      } else {
+         floatAppendMsg(buildBotHTML({
+            intro: `We couldn't find any polling booths for ZIP ${q} in our system.`,
+            bullets: ["Please check if the ZIP is correct.", "Contact the Election Helpline at 1950", "Use the state search tool."],
+            note: "No results matched."
+         }), 'bot');
+      }
+      return;
+    }
+
     const resp = FLOAT_RESPONSES[question] || FLOAT_FALLBACK;
     floatAppendMsg(buildBotHTML(resp), 'bot');
   }, delay);
