@@ -1,0 +1,17 @@
+{
+  "name": "election_guide",
+  "version": "1.0.0",
+  "description": "An interactive, responsive, and mobile-first Web Application acting as an unofficial Voter Information Portal. It serves to assist citizens on their voting journey, providing tools and structured information directly from their mobile browser.",
+  "main": "app.js",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vitest/ui": "^4.1.5",
+    "jsdom": "^29.0.2",
+    "vitest": "^4.1.5"
+  }
+}
