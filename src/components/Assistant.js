@@ -2,10 +2,7 @@
    Assistant Component (Chat)
    ============================================================ */
 
-import { escapeHTML, nowTime } from '../utils/helpers.js';
-
-// Helper for chat time (was missing in previous helpers.js, added here or should update helpers.js)
-const getTime = () => new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+import { escapeHTML, nowTime, isValidPin } from '../utils/helpers.js';
 
 export class Assistant {
   constructor(config) {
@@ -66,7 +63,7 @@ export class Assistant {
 
     const time = document.createElement('span');
     time.className = this.type === 'main' ? 'chat-msg__time' : 'fchat-msg__time';
-    time.textContent = getTime();
+    time.textContent = nowTime();
 
     msg.appendChild(bubble);
     msg.appendChild(time);
@@ -118,21 +115,19 @@ export class Assistant {
   }
 
   handleZipSearch(zip) {
-    import('../utils/helpers.js').then(({ isValidPin, escapeHTML }) => {
-      if (!isValidPin(zip)) {
-        this.appendMessage(`<p>Please enter a valid 6-digit Indian PIN code.</p>`, 'bot');
-        return;
-      }
+    if (!isValidPin(zip)) {
+      this.appendMessage(`<p>Please enter a valid 6-digit Indian PIN code.</p>`, 'bot');
+      return;
+    }
 
-      const data = window.DataStore && window.DataStore.booths ? window.DataStore.booths[zip] : null;
-      if (data && data.length > 0) {
-        const bullets = data.slice(0, 3).map(b => `<li><strong>${escapeHTML(b.name)}</strong><br/>${escapeHTML(b.address)} (${escapeHTML(b.distance)})</li>`).join('');
-        const note = this.type === 'float' ? "I have updated your map below to highlight these locations! 📍" : "I have synced the Map to this location!";
-        this.appendMessage(`<p>Here are the polling booths near ZIP ${escapeHTML(zip)}:</p><ul>${bullets}</ul><p style="font-size:0.8rem;opacity:0.8;">${note}</p>`, 'bot');
-        if (typeof window.triggerMapSearch === 'function') setTimeout(() => window.triggerMapSearch(zip), 500);
-      } else {
-        this.appendMessage(`<p>We couldn't find any booths for ZIP ${escapeHTML(zip)}.</p><ul><li>Ensure the PIN is correct.</li><li>Call Election Helpline at 1950.</li></ul>`, 'bot');
-      }
-    });
+    const data = window.DataStore && window.DataStore.booths ? window.DataStore.booths[zip] : null;
+    if (data && data.length > 0) {
+      const bullets = data.slice(0, 3).map(b => `<li><strong>${escapeHTML(b.name)}</strong><br/>${escapeHTML(b.address)} (${escapeHTML(b.distance)})</li>`).join('');
+      const note = this.type === 'float' ? "I have updated your map below to highlight these locations! 📍" : "I have synced the Map to this location!";
+      this.appendMessage(`<p>Here are the polling booths near ZIP ${escapeHTML(zip)}:</p><ul>${bullets}</ul><p style="font-size:0.8rem;opacity:0.8;">${note}</p>`, 'bot');
+      if (typeof window.triggerMapSearch === 'function') setTimeout(() => window.triggerMapSearch(zip), 500);
+    } else {
+      this.appendMessage(`<p>We couldn't find any booths for ZIP ${escapeHTML(zip)}.</p><ul><li>Ensure the PIN is correct.</li><li>Call Election Helpline at 1950.</li></ul>`, 'bot');
+    }
   }
 }

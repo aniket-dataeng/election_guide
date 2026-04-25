@@ -2,7 +2,7 @@
    Map Component
    ============================================================ */
 
-import { escapeHTML } from '../utils/helpers.js';
+import { escapeHTML, isValidPin, debounce } from '../utils/helpers.js';
 
 export class PollingMap {
   constructor() {
@@ -17,11 +17,8 @@ export class PollingMap {
     this.mapEl = document.getElementById('locator-map');
     this.errorEl = document.getElementById('locator-map-error');
 
-    // Security: Debounce the search handler
-    import('../utils/helpers.js').then(({ debounce }) => {
-        this.debouncedSearch = debounce(() => this.handleSearch(), 400);
-        this.init();
-    });
+    this.debouncedSearch = debounce(() => this.handleSearch(), 400);
+    this.init();
   }
 
   init() {
@@ -66,37 +63,34 @@ export class PollingMap {
   handleSearch() {
     const query = this.input.value.trim();
     
-    // Security: Strict validation
-    import('../utils/helpers.js').then(({ isValidPin }) => {
-      if (!isValidPin(query)) {
-        this.listContainer.innerHTML = '<p class="locator-list-hint" style="color:red;">Error: Please enter a valid 6-digit Indian PIN code.</p>';
-        return;
-      }
+    if (!isValidPin(query)) {
+      this.listContainer.innerHTML = '<p class="locator-list-hint" style="color:red;">Error: Please enter a valid 6-digit Indian PIN code.</p>';
+      return;
+    }
 
-      this.listContainer.innerHTML = '<p class="locator-list-hint">Searching nearby booths...</p>';
-      this.searchBtn.disabled = true;
-      this.searchBtn.textContent = "Searching...";
+    this.listContainer.innerHTML = '<p class="locator-list-hint">Searching nearby booths...</p>';
+    this.searchBtn.disabled = true;
+    this.searchBtn.textContent = "Searching...";
 
-      setTimeout(() => {
-        const results = window.DataStore && window.DataStore.booths && window.DataStore.booths[query] 
-                        ? window.DataStore.booths[query] 
-                        : [];
+    setTimeout(() => {
+      const results = window.DataStore && window.DataStore.booths && window.DataStore.booths[query] 
+                      ? window.DataStore.booths[query] 
+                      : [];
 
-        if (results.length === 0) {
-          this.listContainer.innerHTML = '<p class="locator-list-hint">No booths found for this ZIP code.</p>';
-          this.clearMarkers();
-        } else {
-          this.displayResults(results);
-          if (this.isLoaded && this.map) {
-            this.map.setCenter({ lat: results[0].lat, lng: results[0].lng });
-            this.map.setZoom(14);
-          }
+      if (results.length === 0) {
+        this.listContainer.innerHTML = '<p class="locator-list-hint">No booths found for this ZIP code.</p>';
+        this.clearMarkers();
+      } else {
+        this.displayResults(results);
+        if (this.isLoaded && this.map) {
+          this.map.setCenter({ lat: results[0].lat, lng: results[0].lng });
+          this.map.setZoom(14);
         }
-        
-        this.searchBtn.disabled = false;
-        this.searchBtn.textContent = "Find Booth";
-      }, 600);
-    });
+      }
+      
+      this.searchBtn.disabled = false;
+      this.searchBtn.textContent = "Find Booth";
+    }, 600);
   }
 
   displayResults(booths) {

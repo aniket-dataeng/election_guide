@@ -16,7 +16,7 @@ export function escapeHTML(str) {
  * @returns {boolean}
  */
 export function isValidPin(pin) {
-  return /^\d{6}$/.test(pin.trim());
+  return /^\d{6}$/.test(String(pin).trim());
 }
 
 /**
@@ -35,4 +35,12 @@ export function debounce(func, wait) {
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
+}
+
+/**
+ * Gets current time in HH:MM format (24hr or locale dependent).
+ * @returns {string}
+ */
+export function nowTime() {
+  return new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 }
