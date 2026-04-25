@@ -5,15 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Election Guide – Your official resource for voter registration, election timelines, and civic assistance." />
   <title>Election Guide | Official Voter Information Portal</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://maps.gstatic.com https://*.googleapis.com; connect-src 'self' https://maps.googleapis.com;">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="float-chat.css" />
   <link rel="stylesheet" href="map.css" />
-
 </head>
-<body>
+<body class="no-scroll">
+
+  <!-- A11Y: Skip Link for keyboard users -->
+  <a href="#dashboard" class="skip-link">Skip to main content</a>
 
   <!-- ===== ONBOARDING FLOW ===== -->
   <div class="onboard-overlay" id="onboard-overlay" role="dialog" aria-modal="true" aria-labelledby="onboard-title">
@@ -29,25 +32,29 @@
       <div class="onboard-steps">
         <!-- Step 1: Age -->
         <div class="onboard-step active" id="onboard-step-1">
-          <label class="onboard-label">1. Are you 18 years or older?</label>
-          <div class="onboard-options">
-            <button class="btn btn--outline onboard-opt" data-val="yes">Yes, 18+</button>
-            <button class="btn btn--outline onboard-opt" data-val="no">No, under 18</button>
-          </div>
+          <fieldset class="onboard-fieldset">
+            <legend class="onboard-label">1. Are you 18 years or older?</legend>
+            <div class="onboard-options">
+              <button class="btn btn--outline onboard-opt" data-val="yes">Yes, 18+</button>
+              <button class="btn btn--outline onboard-opt" data-val="no">No, under 18</button>
+            </div>
+          </fieldset>
         </div>
 
         <!-- Step 2: First time -->
         <div class="onboard-step" id="onboard-step-2">
-          <label class="onboard-label">2. Is this your first time voting?</label>
-          <div class="onboard-options">
-            <button class="btn btn--outline onboard-opt" data-val="yes">Yes, first time</button>
-            <button class="btn btn--outline onboard-opt" data-val="no">No, I've voted before</button>
-          </div>
+          <fieldset class="onboard-fieldset">
+            <legend class="onboard-label">2. Is this your first time voting?</legend>
+            <div class="onboard-options">
+              <button class="btn btn--outline onboard-opt" data-val="yes">Yes, first time</button>
+              <button class="btn btn--outline onboard-opt" data-val="no">No, I've voted before</button>
+            </div>
+          </fieldset>
         </div>
 
         <!-- Step 3: Location -->
         <div class="onboard-step" id="onboard-step-3">
-          <label class="onboard-label">3. Select your State/UT</label>
+          <label class="onboard-label" for="onboard-location">3. Select your State/UT</label>
           <select class="onboard-select" id="onboard-location">
             <option value="" disabled selected>Select State</option>
             <option value="dl">Delhi</option>

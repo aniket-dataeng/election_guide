@@ -3,6 +3,30 @@
    Palette: White · Blue #1a56a4 · Grey #6b7280 · Accent Orange #f7931e
    ============================================================ */
 
+/* ===== A11Y IMPROVEMENTS ===== */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--blue-700);
+  color: white;
+  padding: 1rem;
+  z-index: 10000;
+  transition: top 200ms;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0 0 8px 0;
+}
+.skip-link:focus {
+  top: 0;
+}
+.onboard-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.no-scroll { overflow: hidden; }
+
 /* ── Reset & Tokens ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 

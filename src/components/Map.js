@@ -32,12 +32,11 @@ export class PollingMap {
         });
     }
 
-    // Map timeout fallback
     setTimeout(() => {
         if (!this.isLoaded) {
-            this.showError();
+            this.showError("Map service is taking longer than usual");
         }
-    }, 4000);
+    }, 5000);
   }
 
   initGoogleMap() {
@@ -174,9 +173,14 @@ export class PollingMap {
     });
   }
 
-  showError() {
+  showError(reason = "Map loading timeout") {
     if (this.mapEl) this.mapEl.style.display = "none";
-    if (this.errorEl) this.errorEl.style.display = "flex";
+    if (this.errorEl) {
+        this.errorEl.style.display = "flex";
+        this.errorEl.setAttribute('role', 'alert');
+        const p = this.errorEl.querySelector('p');
+        if (p) p.innerHTML = `<strong>Notice:</strong> ${reason}.<br>Please use the list view or check your connection.`;
+    }
     const body = document.querySelector(".locator-body");
     if (body) body.style.gridTemplateColumns = "1fr";
   }
